@@ -1,34 +1,19 @@
-import java.util.Arrays;
-
 class SequentialSieve {
 
-    private boolean[] arrayOfPrimes;
+    private PrimeNumbers primeNumbers;
 
-    SequentialSieve(int size){
-        InitializePrimes(size);
-    }
-
-    private void InitializePrimes(int size){
-
-        arrayOfPrimes = new boolean[size+1];
-
-        Arrays.fill(arrayOfPrimes, true);
-        arrayOfPrimes[0] = false;
-        arrayOfPrimes[1] = false;
+    SequentialSieve(PrimeNumbers primeNumbers){
+        this.primeNumbers = primeNumbers;
     }
 
     void CalculatePrimeNumbers(){
-        for(int i = 2; i*i <= arrayOfPrimes.length; i++){
-            if(arrayOfPrimes[i]){
-                for(int j = i+i; j < arrayOfPrimes.length; j += i){
-                    arrayOfPrimes[j] = false;
+        for(int i = 2; i*i <= primeNumbers.getTotalNumbers(); i++){
+            if(primeNumbers.isPrimeNumber(i)){
+                for(int j = i+i; j < primeNumbers.getTotalNumbers(); j += i){
+                    primeNumbers.setCompositeNumber(j);
                 }
             }
         }
-    }
-
-    boolean[] getPrimeNumbers(){
-        return arrayOfPrimes;
     }
 
 }

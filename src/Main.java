@@ -1,28 +1,46 @@
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        final int TOTAL_NUMBERS = 1000;
+        final int TOTAL_NUMBERS = 100000000;
+
         SequentialSieve sequentialSieve;
+        ParallelSieve parallelSieve;
+
+        PrimeNumbers primeNumbersSequential;
+        PrimeNumbers primeNumbersParallel;
+
         boolean[] primes;
         long executionTime;
         int totalPrimes;
 
-        sequentialSieve = new SequentialSieve(TOTAL_NUMBERS);
-        executionTime = CalculateSequentialSiveEfficiency(sequentialSieve);
-        primes = sequentialSieve.getPrimeNumbers();
-        totalPrimes = CountAllPrimeNumbers(primes);
-        PrintResults(primes, totalPrimes, TOTAL_NUMBERS, executionTime);
+        primeNumbersSequential = new PrimeNumbers(TOTAL_NUMBERS);
+        sequentialSieve = new SequentialSieve(primeNumbersSequential);
+
+        primeNumbersParallel = new PrimeNumbers(TOTAL_NUMBERS);
+        parallelSieve = new ParallelSieve(2, primeNumbersParallel);
+
+        // SEQUENTIAL
+        for(int i = 0; i < 1; i++) {
+            executionTime = CalculateSequentialSiveEfficiency(sequentialSieve);
+            primes = primeNumbersSequential.getPrimeNumbers();
+            totalPrimes = CountAllPrimeNumbers(primes);
+            PrintResults(totalPrimes, TOTAL_NUMBERS, executionTime);
+        }
+
+        // PARALLEL
+        for(int i = 0; i < 1; i++) {
+            executionTime = CalculateParallelSiveEfficiency(parallelSieve);
+            primes = primeNumbersParallel.getPrimeNumbers();
+            totalPrimes = CountAllPrimeNumbers(primes);
+            PrintResults(totalPrimes, TOTAL_NUMBERS, executionTime);
+        }
+
     }
 
-    private static void PrintResults(boolean[] primes, int totalPrimes, int n, long executionTime){
+    private static void PrintResults(int totalPrimes, int n, long executionTime){
         System.out.println("There are a total of " + totalPrimes + " prime numbers in the interval [2;" + n + "]");
-        for(int i = 0; i < primes.length; i++){
-            if(primes[i]){
-                System.out.println(i);
-            }
-        }
-        System.out.println("Sequential algorithm execution time: " + executionTime + " milliseconds.");
+        System.out.println("Algorithm execution time: " + executionTime + " milliseconds.");
     }
 
     private static int CountAllPrimeNumbers(boolean[] primes){
@@ -42,4 +60,14 @@ public class Main {
         long endTime = System.currentTimeMillis();
         return endTime - startTime;
     }
+
+    private static long CalculateParallelSiveEfficiency(ParallelSieve parallelSieve) throws InterruptedException {
+
+        long startTime = System.currentTimeMillis();
+        parallelSieve.start();
+        parallelSieve.join();
+        long endTime = System.currentTimeMillis();
+        return endTime - startTime;
+    }
+
 }
